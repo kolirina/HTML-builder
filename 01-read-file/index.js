@@ -3,7 +3,9 @@ const path = require('path');
 
 const info = [];
 
-const readstream = fs.createReadStream(path.join(__dirname, 'text.txt'), 'utf-8');
+const sourcePath = path.join(__dirname, 'text.txt');
+
+const readstream = fs.createReadStream(sourcePath, 'utf-8');
 
 readstream.on('data', (chunk) => {
     info.push(chunk);
