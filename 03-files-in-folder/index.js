@@ -1,21 +1,19 @@
-const { readdir, stat } = require('fs/promises');
 const path = require('path');
-
-const BYTES_IN_KB = 1024;
+const { readdir, stat } = require('fs/promises');
 
 async function getFilesInfo() {
-    const folderPath = path.join(__dirname, 'secret-folder');
-    const files = await readdir(folderPath, { withFileTypes: true });
+    const dirPath = path.join(__dirname, 'secret-folder');
+    const files = await readdir(dirPath, { withFileTypes: true });
     for (const file of files) {
         if (file.isDirectory()) continue;
-        const filePath = path.join(folderPath, file.name);
-        const fileExtension = path.extname(file.name);
 
+        const filePath = path.join(dirPath, file.name);
+        const fileExtension = path.extname(file.name);
         const fileStats = await stat(filePath);
 
         const fileName = path.basename(filePath, fileExtension);
         const trimmedExtension = fileExtension.slice(1);
-        const fileSizeInKb = `${Math.round(fileStats.size) / BYTES_IN_KB} kB`;
+        const fileSizeInKb = `${(fileStats.size / 1024).toFixed(2)} kB`;
 
         const outputInfo = `${fileName} - ${trimmedExtension} - ${fileSizeInKb}`;
 
