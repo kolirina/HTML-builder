@@ -13,8 +13,7 @@ async function mergeFiles(filePathArr, destinationPath) {
         } catch (error) {
             console.error(`Error processing file ${filePath}:`, error);
         } finally {
-            writeStream.end(); // Close the write stream
-        }
+            writeStream.end(); 
     }
 }
 

@@ -1,39 +1,42 @@
 const { readdir, mkdir, stat, copyFile, unlink } = require('fs/promises');
 const path = require('path');
 
-const currentPath = path.join(__dirname, 'files');
-const destinationPath = path.join(__dirname, 'files-copy');
+const sourceFolder = path.join(__dirname, 'files');
+const destinationFolder = path.join(__dirname, 'files-copy');
 
-async function copyFiles() {
-    const files = await readdir(currentPath);
+async function copyFiles(source, destination) {
+    const files = await readdir(source);
 
     for (const file of files) {
-        const filePath = path.join(currentPath, file);
-        const destFilePath = path.join(destinationPath, file);
+        const sourceFilePath = path.join(source, file);
+        const destinationFilePath = path.join(destination, file);
 
-        await copyFile(filePath, destFilePath);
+        await copyFile(sourceFilePath, destinationFilePath);
     }
 }
 
-async function clearFolder() {
-    const files = await readdir(destinationPath);
+async function clearFolder(folder) {
+    const files = await readdir(folder);
 
     for (const file of files) {
-        const filePath = path.join(destinationPath, file);
+        const filePath = path.join(folder, file);
 
         await unlink(filePath);
     }
 }
 
-const copyAndClear = async() => {
+async function ensureFolderExists(folder) {
     try {
-        await stat(destinationPath);
-        await clearFolder();
+        await stat(folder);
+        await clearFolder(folder);
     } catch {
-        await mkdir(destinationPath, { recursive: true });
-    } finally {
-        await copyFiles();
+        await mkdir(folder, { recursive: true });
     }
-};
+}
+
+async function copyAndClear() {
+    await ensureFolderExists(destinationFolder);
+    await copyFiles(sourceFolder, destinationFolder);
+}
 
 copyAndClear();
