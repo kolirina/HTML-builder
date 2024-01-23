@@ -78,7 +78,7 @@ async function bundleStyles() {
             .map((file) => path.join(stylesFolder, file.name));
 
         const bundlePath = path.join(__dirname, 'project-dist', 'style.css');
-
+        const writer = fs.createWriteStream(bundlePath, { flags: 'w' }, 'utf-8');
         await mergeFiles(cssFilePaths, bundlePath);
         console.log('Bundle created successfully.');
     } catch (error) {
